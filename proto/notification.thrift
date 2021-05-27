@@ -47,8 +47,8 @@ struct FixedDateFilter {
 }
 
 struct RangeDateFilter {
-    2: required base.Timestamp from
-    3: required base.Timestamp to
+    2: required base.Timestamp from_date
+    3: required base.Timestamp to_date
 }
 
 struct NotificationSearchRequest {
