@@ -7,7 +7,6 @@ typedef string Base64
 typedef string ContinuationToken
 typedef base.ID PartyID
 typedef base.ID NotificationTemplateId
-typedef base.ID NotificationId
 
 exception NotificationTemplateNotFound {}
 exception BadContinuationToken { 1: string reason }
@@ -17,14 +16,6 @@ struct NotificationTemplate {
     2: required string title
     3: required base.Timestamp created_at
     4: optional base.Timestamp updated_at
-}
-
-struct Notification {
-    1: required NotificationId id
-    2: required base.Timestamp created_at
-    3: required Party party
-    4: required NotificationTemplate template
-    5: required NotificationStatus status
 }
 
 enum NotificationStatus {
@@ -37,9 +28,15 @@ struct Party {
     2: required string name
 }
 
+struct PartyNotification {
+    1: required NotificationTemplateId id
+    2: required Party party
+    4: required NotificationStatus status
+}
+
 union DateFilter {
-    1: FixedDateFilter fixedDateFilter
-    2: RangeDateFilter rangeDataFilter
+    1: FixedDateFilter fixed_date_filter
+    2: RangeDateFilter range_date_filter
 }
 
 struct FixedDateFilter {
@@ -47,22 +44,19 @@ struct FixedDateFilter {
 }
 
 struct RangeDateFilter {
-    2: required base.Timestamp from_date
-    3: required base.Timestamp to_date
+    1: required base.Timestamp from_date
+    2: required base.Timestamp to_date
 }
 
-struct NotificationSearchRequest {
-    1: optional string title
-    2: optional DateFilter date
-    3: optional NotificationStatus status
-    4: optional PartyID partyId
-    5: optional NotificationTemplateId notification_template_id
-    6: optional ContinuationToken continuation_token
-    7: optional i32 limit
+struct NotificationTemplatePartyRequest {
+    1: required NotificationTemplateId id
+    2: optional NotificationStatus status
+    3: optional ContinuationToken continuation_token
+    4: optional i32 limit
 }
 
-struct NotificationSearchResponse {
-    1: required list<Notification> result
+struct NotificationTemplatePartyResponse {
+    1: required list<PartyNotification> parties
     2: optional ContinuationToken continuation_token
 }
 
@@ -78,24 +72,13 @@ struct NotificationTemplateSearchResponse {
     2: optional ContinuationToken continuation_token
 }
 
-struct PartySearchRequest {
-    1: optional string name
-    2: optional ContinuationToken continuation_token
-    3: optional i32 limit
-}
-
-struct PartySearchResponse {
-    1: required list<Party> result
-    2: optional ContinuationToken continuation_token
-}
-
-struct NotificationCreateRequest {
+struct NotificationTemplateCreateRequest {
     1: required string title
     2: required Base64 content
 }
 
-struct NotificationModifyRequest {
-    1: required base.ID id
+struct NotificationTemplateModifyRequest {
+    1: required NotificationTemplateId id
     2: optional string title
     3: optional Base64 content
 }
@@ -103,13 +86,13 @@ struct NotificationModifyRequest {
 service NotificationService {
 
     /* Создание шаблона уведомления */
-    NotificationTemplate createNotificationTemplate(1: NotificationCreateRequest notification_request)
+    NotificationTemplate createNotificationTemplate(1: NotificationTemplateCreateRequest notification_request)
             throws (
                 1: base.InvalidRequest ex1
             )
 
     /* Редактирование шаблона уведомления */
-    NotificationTemplate modifyNotificationTemplate(1: NotificationModifyRequest notification_request)
+    NotificationTemplate modifyNotificationTemplate(1: NotificationTemplateModifyRequest notification_request)
             throws (
                 1: base.InvalidRequest ex1,
                 2: NotificationTemplateNotFound ex2
@@ -120,13 +103,14 @@ service NotificationService {
                 1: NotificationTemplateNotFound ex1
             )
 
-    /* Поиск шаблонов уведомлений */
-    list<NotificationTemplate> findNotificationTemplate(1: NotificationTemplateSearchRequest notification_search_request)
+    /* Получение списка отправленных уведомлений для выбранного шаблона */
+    NotificationTemplatePartyResponse findNotificationTemplateParties(1: NotificationTemplatePartyRequest party_request)
             throws (
                 1: BadContinuationToken ex1
             )
-    /* Поиск уведомлений */
-    list<NotificationSearchResponse> findNotification(1: NotificationSearchRequest notification_search_request)
+
+    /* Поиск шаблонов уведомлений */
+    list<NotificationTemplate> findNotificationTemplates(1: NotificationTemplateSearchRequest notification_search_request)
             throws (
                 1: BadContinuationToken ex1
             )
@@ -136,9 +120,5 @@ service NotificationService {
 
     /* Отправка уведомления для всех мерчантов */
     void sendNotificationAll(1: NotificationTemplateId template_id)
-
-    /* Получение возможного списка мерчантов для отправки уведомлений */
-    PartySearchResponse getParty(1: PartySearchRequest party_request)
-
 
 }
