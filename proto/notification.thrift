@@ -10,12 +10,19 @@ typedef base.ID NotificationTemplateId
 
 exception NotificationTemplateNotFound {}
 exception BadContinuationToken { 1: string reason }
+exception BadNotificationTemplateState { 1: string reason }
 
 struct NotificationTemplate {
     1: required NotificationTemplateId id
     2: required string title
     3: required base.Timestamp created_at
     4: optional base.Timestamp updated_at
+    5: required NotificationTemplateStatus status
+}
+
+enum NotificationTemplateStatus {
+    draft
+    final
 }
 
 enum NotificationStatus {
@@ -95,7 +102,8 @@ service NotificationService {
     NotificationTemplate modifyNotificationTemplate(1: NotificationTemplateModifyRequest notification_request)
             throws (
                 1: base.InvalidRequest ex1,
-                2: NotificationTemplateNotFound ex2
+                2: NotificationTemplateNotFound ex2,
+                3: BadNotificationTemplateState ex3
             )
 
     NotificationTemplate getNotificationTemplate(1: NotificationTemplateId template_id)
