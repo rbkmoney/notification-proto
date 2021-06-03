@@ -31,7 +31,7 @@ struct Party {
 struct PartyNotification {
     1: required NotificationTemplateId id
     2: required Party party
-    4: required NotificationStatus status
+    3: required NotificationStatus status
 }
 
 union DateFilter {
