@@ -17,7 +17,7 @@ struct NotificationTemplate {
     2: required string title
     3: required base.Timestamp created_at
     4: optional base.Timestamp updated_at
-    5: required NotificationTemplateStatus status
+    5: required NotificationTemplateState state
     6: optional NotificationTemplateDistributionDetails distribution_details
 }
 
@@ -26,9 +26,9 @@ struct NotificationTemplateDistributionDetails {
     2: required i64 total_count
 }
 
-enum NotificationTemplateStatus {
-    draft
-    final
+enum NotificationTemplateState {
+    draft_state
+    final_state
 }
 
 enum NotificationStatus {
