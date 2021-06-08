@@ -124,7 +124,7 @@ service NotificationService {
             )
 
     /* Поиск шаблонов уведомлений */
-    list<NotificationTemplate> findNotificationTemplates(1: NotificationTemplateSearchRequest notification_search_request)
+    NotificationTemplateSearchResponse findNotificationTemplates(1: NotificationTemplateSearchRequest notification_search_request)
             throws (
                 1: BadContinuationToken ex1
             )
