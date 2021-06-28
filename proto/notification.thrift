@@ -134,13 +134,13 @@ service NotificationService {
     /* Отправка уведомления выбранным мерчантам */
     void sendNotification(1: NotificationTemplateId template_id, 2: list<PartyID> party_ids)
             throws (
-                1: NotificationTemplateNotFound ex2,
+                1: NotificationTemplateNotFound ex1,
             )
 
     /* Отправка уведомления для всех мерчантов */
     void sendNotificationAll(1: NotificationTemplateId template_id)
             throws (
-                1: NotificationTemplateNotFound ex2,
+                1: NotificationTemplateNotFound ex1,
             )
 
 }
