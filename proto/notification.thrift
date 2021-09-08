@@ -109,14 +109,15 @@ struct NotificationTemplateModifyRequest {
     3: optional NotificationContent content
 }
 
-struct PartyNotificationRequest {
-    1: required PartyFilter party_filter
-    2: optional DateFilter date_filter
-}
-
 union PartyFilter {
     1: PartyID party_id
     2: string email
+}
+
+struct PartyNotificationRequest {
+    1: required PartyFilter party_filter
+    2: optional DateFilter date_filter
+    3: optional ContinuationToken continuation_token
 }
 
 struct PartyNotificationResponse {
