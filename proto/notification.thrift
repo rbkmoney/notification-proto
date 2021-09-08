@@ -109,6 +109,21 @@ struct NotificationTemplateModifyRequest {
     3: optional NotificationContent content
 }
 
+struct PartyNotificationRequest {
+    1: required PartyFilter party_filter
+    2: optional DateFilter date_filter
+}
+
+union PartyFilter {
+    1: PartyID party_id
+    2: string email
+}
+
+struct PartyNotificationResponse {
+    1: required list<PartyNotification> parties
+    2: optional ContinuationToken continuation_token
+}
+
 service NotificationService {
 
     /* Создание шаблона уведомления */
@@ -138,6 +153,11 @@ service NotificationService {
 
     /* Поиск шаблонов уведомлений */
     NotificationTemplateSearchResponse findNotificationTemplates(1: NotificationTemplateSearchRequest notification_search_request)
+            throws (
+                1: BadContinuationToken ex1
+            )
+
+    PartyNotificationResponse findPartyNotifications(1: PartyNotificationRequest party_notification_request)
             throws (
                 1: BadContinuationToken ex1
             )
