@@ -53,16 +53,7 @@ struct PartyNotification {
     4: required base.Timestamp created_at
 }
 
-union DateFilter {
-    1: FixedDateFilter fixed_date_filter
-    2: RangeDateFilter range_date_filter
-}
-
-struct FixedDateFilter {
-    1: required base.Timestamp date
-}
-
-struct RangeDateFilter {
+struct DateFilter {
     1: required base.Timestamp from_date
     2: required base.Timestamp to_date
 }
@@ -82,7 +73,7 @@ struct NotificationTemplatePartyResponse {
 struct NotificationTemplateSearchRequest {
     1: optional string title
     2: optional string content
-    3: optional DateFilter date
+    3: optional DateFilter date_filter
     4: optional ContinuationToken continuation_token
     5: optional i32 limit
 }
